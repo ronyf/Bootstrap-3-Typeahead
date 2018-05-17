@@ -156,13 +156,16 @@
 
     lookup: function (query) {
       var items;
-      if (typeof(query) != 'undefined' && query !== null) {
-        this.query = query;
+
+      if (typeof(query) !== 'undefined' && query !== null) {
+        this.query = query || '';
       } else {
         this.query = this.$element.val() || this.$element.text() || '';
       }
 
-      if (this.query.length < this.options.minLength && !this.options.showHintOnFocus) {
+      if (this.query.length < this.options.minLength &&
+        (query === undefined || this.query.length !== 0 || !this.options.showDropdownOnKeyDown) &&
+        !this.options.showHintOnFocus) {
         return this.shown ? this.hide() : this;
       }
 
@@ -449,6 +452,12 @@
       }
       switch (e.keyCode) {
         case 40: // down arrow
+          if (this.options.showDropdownOnKeyDown) {
+            e.preventDefault();
+            this.lookup('');
+          }
+          break;
+
         case 38: // up arrow
         case 16: // shift
         case 17: // ctrl
