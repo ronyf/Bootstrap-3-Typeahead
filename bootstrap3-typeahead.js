@@ -424,8 +424,10 @@
 
     keydown: function (e) {
       this.suppressKeyPressRepeat = ~$.inArray(e.keyCode, [40,38,9,13,27]);
-      if (!this.shown && e.keyCode == 40) {
-        this.lookup();
+      if (!this.shown && e.keyCode === 40) {
+        if (this.options.showDropdownOnKeyDown) {
+          this.lookup('');
+        }
       } else {
         this.move(e);
       }
@@ -452,12 +454,6 @@
       }
       switch (e.keyCode) {
         case 40: // down arrow
-          if (this.options.showDropdownOnKeyDown) {
-            e.preventDefault();
-            this.lookup('');
-          }
-          break;
-
         case 38: // up arrow
         case 16: // shift
         case 17: // ctrl
