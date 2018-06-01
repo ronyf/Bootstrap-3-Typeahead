@@ -424,6 +424,12 @@
 
     keydown: function (e) {
       this.suppressKeyPressRepeat = ~$.inArray(e.keyCode, [40,38,9,13,27]);
+      if (this.options.showHintOnFocus && !this.skipShowHintOnFocus && e.keyCode === 8) {
+        if (this.shown) {
+          this.hide();
+        }
+        this.lookup('');
+      }
       if (!this.shown && e.keyCode === 40) {
         if (this.options.showDropdownOnKeyDown) {
           this.lookup('');
@@ -492,8 +498,10 @@
     },
 
     blur: function (e) {
-      if (!this.mousedover && !this.mouseddown && this.shown) {
-        this.hide();
+      if (!this.mousedover && !this.mouseddown) {
+        if (this.shown) {
+          this.hide();
+        }
         this.focused = false;
       } else if (this.mouseddown) {
         // This is for IE that blurs the input when user clicks on scroll.
